@@ -69,21 +69,16 @@ def update_cupcake(cupcake_id):
 
     cupcake = Cupcake.query.get_or_404(cupcake_id)
 
-    flavor = request.json["flavor"]
-    size = request.json["size"]
-    rating = request.json["rating"]
-    image = request.json["image"] or DEFAULT_URL
-
-    cupcake.flavor = flavor
-    cupcake.size = size
-    cupcake.rating = rating
-    cupcake.image = image
+    cupcake.flavor = request.json.get("flavor",cupcake.flavor)
+    cupcake.size = request.json.get("size",cupcake.size)
+    cupcake.rating = request.json.get("rating",cupcake.rating)
+    cupcake.image = request.json.get("image",cupcake.image) or DEFAULT_URL
 
     db.session.commit()
 
     serialized = cupcake.serialize()
 
-    return (jsonify(cupcake=serialized), 201)
+    return jsonify(cupcake=serialized)
 
 @app.delete("/api/cupcakes/<int:cupcake_id>")
 def delete_cupcake(cupcake_id):
