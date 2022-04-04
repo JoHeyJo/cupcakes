@@ -2,7 +2,7 @@
 from flask import Flask, jsonify, request
 from flask_debugtoolbar import DebugToolbarExtension
 
-from models import db, connect_db, Cupcake
+from models import db, connect_db, Cupcake, DEFAULT_URL
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///cupcakes'
@@ -62,3 +62,35 @@ def create_cupcake():
     serialized = cupcake.serialize()
 
     return (jsonify(cupcake=serialized), 201)
+
+@app.patch("/api/cupcakes/<int:cupcake_id>")
+def update_cupcake(cupcake_id):
+    """Get cupcake info from id"""
+
+    cupcake = Cupcake.query.get_or_404(cupcake_id)
+
+    flavor = request.json["flavor"]
+    size = request.json["size"]
+    rating = request.json["rating"]
+    image = request.json["image"] or DEFAULT_URL
+
+    cupcake.flavor = flavor
+    cupcake.size = size
+    cupcake.rating = rating
+    cupcake.image = image
+
+    db.session.commit()
+
+    serialized = cupcake.serialize()
+
+    return (jsonify(cupcake=serialized), 201)
+
+@app.delete("/api/cupcakes/<int:cupcake_id>")
+def delete_cupcake(cupcake_id):
+    """Delete cupcake from server"""
+
+    cupcake = Cupcake.query.get_or_404(cupcake_id)
+
+    db.session.delete(cupcake)
+
+    return jsonify({"deleted" : cupcake_id})
