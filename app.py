@@ -1,5 +1,5 @@
 """Flask app for Cupcakes"""
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_debugtoolbar import DebugToolbarExtension
 
 from models import db, connect_db, Cupcake
@@ -27,18 +27,18 @@ debug = DebugToolbarExtension(app)
 
 @app.get("/api/cupcakes")
 def send_all_cupcakes():
-    """Return data about cupcakes"""
+    """Return data about cupcakes."""
 
     cupcakes = Cupcake.query.all()
     serialized = [cupcake.serialize() for cupcake in cupcakes]
 
-    return jsonify(cupcakes=serialzed)
+    return jsonify(cupcakes=serialized)
 
 
 @app.get("/api/cupcakes/<int:cupcake_id>")
 def send_single_capcake(cupcake_id):
     """Get data about a single cupcake."""
-
+    #if else/ with status code of 400 to avoid sending HTML
     cupcake = Cupcake.query.get_or_404(cupcake_id)
     serialized = cupcake.serialize()
 
@@ -47,12 +47,12 @@ def send_single_capcake(cupcake_id):
 
 @app.post("/api/cupcakes")
 def create_cupcake():
-    """Create new cupcake"""
+    """Create new cupcake."""
 
     flavor = request.json["flavor"]
     size = request.json["size"]
     rating = request.json["rating"]
-    image = request.json["image"]
+    image = request.json["image"] or None
 
     cupcake = Cupcake(flavor=flavor, size=size, rating=rating, image=image)
 
@@ -61,4 +61,4 @@ def create_cupcake():
 
     serialized = cupcake.serialize()
 
-    return jsonify(cupcake=serialzed)
+    return (jsonify(cupcake=serialized), 201)
