@@ -1,5 +1,5 @@
 """Flask app for Cupcakes"""
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_cors import CORS
 
@@ -27,6 +27,14 @@ debug = DebugToolbarExtension(app)
 
 ##############################################################################
 # cupcakes routes
+
+@app.get("/")
+def homepage():
+
+    """Render homepage"""
+
+    return render_template("base.html")
+
 
 
 @app.get("/api/cupcakes")

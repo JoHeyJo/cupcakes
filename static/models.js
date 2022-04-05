@@ -1,6 +1,6 @@
 "use strict";
 
-const BASE_API_URL = "http://localhost:5001/api";
+const BASE_API_URL = "http://localhost:5000/api/cupcakes";
 
 /**Create a class of cupcake */
 
@@ -24,10 +24,12 @@ class Cupcake {
 
     const response = await axios.get(BASE_API_URL);
 
-    return response.data.cupcakes.map(cupcake => new Cupcake(
+    cupcakes = response.data.cupcakes.map(cupcake => new Cupcake(
       cupcake.id, cupcake.flavor, cupcake.size,
       cupcake.rating, cupcake.image
     ));
+
+
   }
 
   /**Post cupcake info to API and instanciate a cupcake locally */
