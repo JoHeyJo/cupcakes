@@ -177,5 +177,5 @@ class CupcakeViewsTestCase(TestCase):
             self.assertEqual(resp.status_code, 200)
             self.assertEqual(data, {"deleted": self.cupcake.id})
 
-#add test for when you don't get a 200 response 
+#add test for when you don't get a 200 response
 

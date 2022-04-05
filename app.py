@@ -1,10 +1,14 @@
 """Flask app for Cupcakes"""
 from flask import Flask, jsonify, request
 from flask_debugtoolbar import DebugToolbarExtension
+from flask_cors import CORS
+
 
 from models import db, connect_db, Cupcake, DEFAULT_URL
 
 app = Flask(__name__)
+CORS(app)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///cupcakes'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
